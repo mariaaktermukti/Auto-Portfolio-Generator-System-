@@ -1,0 +1,35 @@
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+*.iml
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Build/cache files
+node_modules/
+vendor/
+composer.lock
+package-lock.json
+pnpm-lock.yaml
+
+# Logs
+logs/
+*.log
+
+# Database backups
+*.sql.bak
+
+# Old structure (for cleanup)
+Features/

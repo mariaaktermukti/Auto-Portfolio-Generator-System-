@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'config.php';
+require '../config/config.php';
 
 $error = '';
 
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $_SESSION['user_name'] = $name;
                 $_SESSION['user_email'] = $email;
 
-                header("Location: dashboard.php");
+                header("Location: /public/dashboard.php");
                 exit;
             } else {
                 $error = "Invalid password!";
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <html>
 <head>
     <title>Login - Auto Portfolio</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
     <div class="container">
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <?php if ($error): ?>
             <p class="error"><?php echo $error; ?></p>
         <?php endif; ?>
-        <form method="POST" action="">
+        <form method="POST" action="/public/login.php">
             <label>Email</label>
             <input type="email" name="email" required>
 
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             <button type="submit">Login</button>
         </form>
-        <p>Don't have an account? <a href="register.php">Register</a></p>
+        <p>Don't have an account? <a href="/public/register.php">Register</a></p>
     </div>
 </body>
 </html>
