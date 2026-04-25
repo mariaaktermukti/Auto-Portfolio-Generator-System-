@@ -1,0 +1,12 @@
+-- Run this in phpMyAdmin or MySQL CLI
+CREATE DATABASE IF NOT EXISTS portfolio_db;
+USE portfolio_db;
+
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    phone VARCHAR(20) DEFAULT NULL,
+    profile_pic VARCHAR(255) DEFAULT NULL
+);
