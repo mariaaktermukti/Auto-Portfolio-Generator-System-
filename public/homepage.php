@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 session_start();
 ?>
 <!DOCTYPE html>
@@ -7,14 +7,14 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Portfolio</title>
-    <link rel="stylesheet" href="/assets/css/homepage.css">
+    <link rel="stylesheet" href="../assets/css/homepage.css">
 </head>
 <body>
     <!-- NAVBAR -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
-                <a href="/public/homepage.php">👨‍💻 My Portfolio</a>
+                <a href="homepage.php">????? My Portfolio</a>
             </div>
             <ul class="nav-menu">
                 <li class="nav-item"><a href="#home" class="nav-link">Home</a></li>
@@ -24,9 +24,9 @@ session_start();
 
                 <!-- Admin Link -->
                 <?php if (isset($_SESSION['user_id'])): ?>
-                    <li class="nav-item"><a href="/public/dashboard.php" class="nav-link nav-btn-primary">Dashboard</a></li>
+                    <li class="nav-item"><a href="dashboard.php" class="nav-link nav-btn-primary">Dashboard</a></li>
                 <?php else: ?>
-                    <li class="nav-item"><a href="/public/login.php" class="nav-link">Admin Login</a></li>
+                    <li class="nav-item"><a href="login.php" class="nav-link">Admin Login</a></li>
                 <?php endif; ?>
             </ul>
         </div>
@@ -55,17 +55,17 @@ session_start();
         </p>
         <div class="features-grid">
             <div class="feature-card">
-                <div class="feature-icon">💻</div>
+                <div class="feature-icon">??</div>
                 <h3>Frontend Architecture</h3>
                 <p>HTML5, CSS3, JavaScript, React, responsive UI design styling.</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">⚙️</div>
+                <div class="feature-icon">??</div>
                 <h3>Backend Development</h3>
                 <p>PHP, Node.js, RESTful web services, and robust server architecture.</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">🗄️</div>
+                <div class="feature-icon">???</div>
                 <h3>Database Management</h3>
                 <p>MySQL, MongoDB, PostgreSQL, and optimising queries.</p>
             </div>
@@ -108,6 +108,6 @@ session_start();
         </div>
     </footer>
 
-    <script src="/assets/js/navbar.js"></script>
+    <script src="../assets/js/navbar.js"></script>
 </body>
 </html>
