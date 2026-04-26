@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <html>
 <head>
     <title>Register - Auto Portfolio</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
     <div class="container">
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <?php if ($success): ?>
             <p class="success"><?php echo $success; ?></p>
         <?php endif; ?>
-        <form method="POST" action="/public/register.php">
+        <form method="POST" action="register.php">
             <label>Full Name</label>
             <input type="text" name="name" required>
 
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             <button type="submit">Register</button>
         </form>
-        <p>Already have an account? <a href="/public/login.php">Login</a></p>
+        <p>Already have an account? <a href="login.php">Login</a></p>
     </div>
 </body>
 </html>
