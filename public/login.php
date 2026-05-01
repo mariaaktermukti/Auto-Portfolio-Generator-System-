@@ -1,42 +1,37 @@
 <?php
 session_start();
 require '../config/config.php';
+require '../src/Auth/AuthHandler.php';
 
 $error = '';
+$auth = new AuthHandler($conn);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $email    = trim($_POST['email']);
-    $password = $_POST['password'];
-
-    if (empty($email) || empty($password)) {
-        $error = "Email and Password are required!";
+    // Validate CSRF token
+    if (!isset($_POST['csrf_token']) || !validateCSRFToken($_POST['csrf_token'])) {
+        $error = "Security token validation failed!";
     } else {
-        $stmt = $conn->prepare("SELECT id, name, email, password FROM users WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $stmt->store_result();
+        $email    = trim($_POST['email']);
+        $password = $_POST['password'];
 
-        if ($stmt->num_rows == 1) {
-            $stmt->bind_result($id, $name, $email, $hashedPassword);
-            $stmt->fetch();
+        $result = $auth->login($email, $password);
+        
+        if ($result['success']) {
+            // Set session variables
+            $_SESSION['user_id'] = $result['data']['user_id'];
+            $_SESSION['user_name'] = $result['data']['user_name'];
+            $_SESSION['user_email'] = $result['data']['user_email'];
+            $_SESSION['user_role'] = $result['data']['user_role'];
 
-            if (!empty($hashedPassword) && password_verify($password, (string)$hashedPassword)) {
-                // Set session variables
-                $_SESSION['user_id'] = $id;
-                $_SESSION['user_name'] = $name;
-                $_SESSION['user_email'] = $email;
-
-                header("Location: dashboard.php");
-                exit;
-            } else {
-                $error = "Invalid password!";
-            }
+            header("Location: dashboard.php");
+            exit;
         } else {
-            $error = "No account found with that email!";
+            $error = $result['message'];
         }
-        $stmt->close();
     }
 }
+
+$csrf_token = generateCSRFToken();
 ?>
 <!DOCTYPE html>
 <html>
@@ -51,6 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <p class="error"><?php echo $error; ?></p>
         <?php endif; ?>
         <form method="POST" action="login.php">
+            <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
+            
             <label>Email</label>
             <input type="email" name="email" required>
 

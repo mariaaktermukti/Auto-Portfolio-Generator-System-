@@ -1,42 +1,38 @@
 <?php
 session_start();
 require '../config/config.php';
+require '../src/Auth/AuthHandler.php';
 
 $error = '';
 $success = '';
+$auth = new AuthHandler($conn);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $name     = trim($_POST['name']);
-    $email    = trim($_POST['email']);
-    $password = $_POST['password'];
-    $phone    = trim($_POST['phone']);
-
-    // Basic validation
-    if (empty($name) || empty($email) || empty($password)) {
-        $error = "Name, Email and Password are required!";
+    // Validate CSRF token
+    if (!isset($_POST['csrf_token']) || !validateCSRFToken($_POST['csrf_token'])) {
+        $error = "Security token validation failed!";
     } else {
-        // Check if email already exists
-        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $stmt->store_result();
+        $name     = trim($_POST['name']);
+        $email    = trim($_POST['email']);
+        $password = $_POST['password'];
+        $confirm_password = $_POST['confirm_password'];
+        $phone    = trim($_POST['phone'] ?? '');
 
-        if ($stmt->num_rows > 0) {
-            $error = "Email already registered!";
+        // Check password confirmation
+        if ($password !== $confirm_password) {
+            $error = "Passwords do not match!";
         } else {
-            // Insert user
-            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            $stmt = $conn->prepare("INSERT INTO users (name, email, password, phone) VALUES (?, ?, ?, ?)");
-            $stmt->bind_param("ssss", $name, $email, $hashedPassword, $phone);
-            if ($stmt->execute()) {
-                $success = "Registration successful! You can now login.";
+            $result = $auth->register($name, $email, $password, $phone);
+            if ($result['success']) {
+                $success = $result['message'];
             } else {
-                $error = "Something went wrong. Try again.";
+                $error = $result['message'];
             }
         }
-        $stmt->close();
     }
 }
+
+$csrf_token = generateCSRFToken();
 ?>
 <!DOCTYPE html>
 <html>
@@ -54,14 +50,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <p class="success"><?php echo $success; ?></p>
         <?php endif; ?>
         <form method="POST" action="register.php">
+            <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
+            
             <label>Full Name</label>
             <input type="text" name="name" required>
 
             <label>Email</label>
             <input type="email" name="email" required>
 
-            <label>Password</label>
+            <label>Password (minimum 8 characters)</label>
             <input type="password" name="password" required>
+
+            <label>Confirm Password</label>
+            <input type="password" name="confirm_password" required>
 
             <label>Phone (optional)</label>
             <input type="text" name="phone">
